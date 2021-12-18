@@ -5,15 +5,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "flupper",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flupper (profile mode)",
+      "name": "flup",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "debug",
     }
   ]
 }

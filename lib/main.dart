@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flupper/flupper.dart';
+import 'package:flup/flup.dart';
 
 void main() {
-  runApp(const Flupper());
+  runApp(const Flup());
 }
