@@ -1,20 +1,43 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flup/pages/basic_page.dart';
+import 'package:flup/pages/basic_title_page.dart';
+import 'package:flup/pages/sbs_page.dart';
+import 'package:flup/pages/sbsww_page.dart';
+import 'package:flup/md_parser/separator.dart';
+
+class FlupStyle {
+  final String? coverImageUrl;
+  const FlupStyle({
+    this.coverImageUrl,
+  });
+}
 
 class Flup extends StatefulWidget {
-  const Flup({Key? key}) : super(key: key);
+  const Flup({
+    Key? key,
+    this.style,
+    this.title = "Flup Slide",
+    required this.md,
+  }) : super(key: key);
+
+  final String md;
+  final String title;
+  final FlupStyle? style;
   @override
   _FlupState createState() => _FlupState();
 }
 
 class _FlupState extends State<Flup> {
   int page = 0;
-  final int max = 3;
   @override
   Widget build(BuildContext context) {
+    var max = mdSeparator(widget.md).length;
     return MaterialApp(
-      title: 'Flup Slides',
-      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      title: widget.title,
+      theme: ThemeData.light(),
       home: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
@@ -29,38 +52,34 @@ class _FlupState extends State<Flup> {
               },
               child: IndexedStack(
                 index: page,
-                children: const [
-                  BasicPage(page: 1, md: md1),
-                  BasicPage(page: 2, md: md2),
-                  BasicPage(page: 3, md: md3),
-                ],
+                children: mdSeparator(widget.md).asMap().entries.map((entry) {
+                  if (entry.key == 0) {
+                    return BasicTitlePage(
+                      coverUrl: widget.style?.coverImageUrl,
+                      page: entry.key + 1,
+                      md: entry.value,
+                    );
+                  } else if (entry.key == 1) {
+                    return BasicPage(page: entry.key + 1, md: entry.value);
+                  } else if (entry.key == 2) {
+                    return SbsPage(
+                        coverUrl: widget.style?.coverImageUrl,
+                        page: entry.key + 1,
+                        md: entry.value);
+                  } else if (entry.key == 3) {
+                    return SbswwPage(
+                        widget: const SampleMyWidget(),
+                        page: entry.key + 1,
+                        md: entry.value);
+                  } else {
+                    return BasicPage(page: entry.key + 1, md: entry.value);
+                  }
+                }).toList(),
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class BasicPage extends StatelessWidget {
-  const BasicPage({Key? key, required this.md, required this.page})
-      : super(key: key);
-  final int page;
-  final String md;
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(children: [
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Center(child: Text('- $page -')),
-          ),
-        ]),
-        Markdown(data: md),
-      ],
     );
   }
 }
@@ -80,57 +99,48 @@ class SlideScreen extends StatelessWidget {
   }
 }
 
-const md1 = '''
-# header
-
-body
-
-## header2
-
-body2
-''';
-
-const md2 = '''
-# Next Page
-
-- test
-- list
-
-## Sub
-
-1. number
-1. list
-
-## Table
-
-|test|test2|
-|--|--|
-|item|item2|
-
-## Code
-
-```dart
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const Flup());
+class SampleMyWidget extends StatefulWidget {
+  const SampleMyWidget({Key? key}) : super(key: key);
+  @override
+  _SampleMyWidgetState createState() => _SampleMyWidgetState();
 }
-```
 
-<!-- 
-Comment
--->
-
-''';
-
-const md3 = '''
-# header
-
-third page
-
-![](https://images.unsplash.com/photo-1495819903255-00fdfa38a8de?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1627&q=80#300x300)
-
-## header2
-
-second body 
-''';
+class _SampleMyWidgetState extends State<SampleMyWidget> {
+  int counter = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Container(
+        height: 300,
+        width: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text(
+              'Counter',
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+            ElevatedButton(
+              child: const Text('count up'),
+              onPressed: () {
+                setState(() => counter = counter + 1);
+              },
+            ),
+            Text(
+              '$counter',
+              style: const TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.blueGrey[800],
+      ),
+    );
+  }
+}
