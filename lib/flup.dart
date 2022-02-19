@@ -1,11 +1,10 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flup/pages/basic_page.dart';
 import 'package:flup/pages/basic_title_page.dart';
 import 'package:flup/pages/sbs_page.dart';
 import 'package:flup/pages/sbsww_page.dart';
 import 'package:flup/md_parser/separator.dart';
+import 'package:flup/widget/sample.dart';
 
 class FlupStyle {
   final String? coverImageUrl;
@@ -37,7 +36,7 @@ class _FlupState extends State<Flup> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: widget.title,
-      theme: ThemeData.light(),
+      //theme: ThemeData.light(),
       home: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
@@ -68,7 +67,7 @@ class _FlupState extends State<Flup> {
                         md: entry.value);
                   } else if (entry.key == 3) {
                     return SbswwPage(
-                        widget: const SampleMyWidget(),
+                        widget: const Sample(),
                         page: entry.key + 1,
                         md: entry.value);
                   } else {
@@ -99,48 +98,3 @@ class SlideScreen extends StatelessWidget {
   }
 }
 
-class SampleMyWidget extends StatefulWidget {
-  const SampleMyWidget({Key? key}) : super(key: key);
-  @override
-  _SampleMyWidgetState createState() => _SampleMyWidgetState();
-}
-
-class _SampleMyWidgetState extends State<SampleMyWidget> {
-  int counter = 0;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Container(
-        height: 300,
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text(
-              'Counter',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
-            ElevatedButton(
-              child: const Text('count up'),
-              onPressed: () {
-                setState(() => counter = counter + 1);
-              },
-            ),
-            Text(
-              '$counter',
-              style: const TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blueGrey[800],
-      ),
-    );
-  }
-}

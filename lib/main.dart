@@ -26,8 +26,6 @@ Presentation Slides for Flutter Developers
 ## Slide Subtitle
 
 - bullet text
-  - bullet text
-  - bullet text
 - bullet text
 - bullet text
 
